@@ -6,6 +6,7 @@ import lombok.Data;
 public class AadhaarPanDetailsDto {
 
     private Long id;
+    private Long refId;
     private Long aadhaarNumber;
     private String panNumber;
     private byte[] cancelledCheque;

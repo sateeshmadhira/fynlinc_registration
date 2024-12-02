@@ -5,5 +5,6 @@ import lombok.Data;
 @Data
 public class CompanyTurnOverDto {
     private Long id;
+    private Long refId;
     private String turnOver;
 }

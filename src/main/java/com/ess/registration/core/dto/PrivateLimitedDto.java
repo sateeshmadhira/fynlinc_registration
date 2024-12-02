@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class PrivateLimitedDto {
     private Long id;
+    private Long refId;
     private byte[] accountStatement;
     private byte[] ITRS;
     private byte[] GSTReturns;

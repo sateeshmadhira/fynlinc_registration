@@ -6,6 +6,7 @@ import lombok.Data;
 public class LoginCredentialsDto {
 
     private Long id;
+    private Long refId;
     private String email;
     private String setPassword;
     private String confirmPassword;
