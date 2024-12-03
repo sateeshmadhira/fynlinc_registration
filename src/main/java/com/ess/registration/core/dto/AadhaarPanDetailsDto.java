@@ -9,6 +9,6 @@ public class AadhaarPanDetailsDto {
     private Long refId;
     private Long aadhaarNumber;
     private String panNumber;
-    private byte[] cancelledCheque;
+    private String cancelledCheque;
 
 }

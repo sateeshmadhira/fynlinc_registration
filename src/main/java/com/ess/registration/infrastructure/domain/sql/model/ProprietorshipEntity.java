@@ -5,35 +5,35 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "SOLO")
+@Table(name = "SOLO_PROPRIETOR")
 public class ProprietorshipEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "SOLO_ID")
+    @Column(name = "SOLO_PROPRIETOR_ID")
     private Long id;
 
     @Lob
     @Column(name = "ACCOUNT_STATEMENT")
-    private byte[] accountStatement;
+    private String accountStatement;
 
     @Lob
     @Column(name = "ITRS")
-    private byte[] ITRS;
+    private String ITRS;
 
     @Lob
     @Column(name = "GST_RETURNS")
-    private byte[] GSTReturns;
+    private String GSTReturns;
 
     @Lob
     @Column(name = "GST_CERTIFICATE")
-    private byte[] GSTCertificate;
+    private String GSTCertificate;
 
     @Lob
     @Column(name = "KYC")
-    private byte[] KYC;
+    private String KYC;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "ORGANIZATION_ID")
     private OrganizationDetailsEntity organizationDetailsEntity;
 }

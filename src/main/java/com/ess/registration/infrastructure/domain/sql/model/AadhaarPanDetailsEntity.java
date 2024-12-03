@@ -5,14 +5,15 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "REGISTRATION")
-public class AadhaarPanDetailsEntity  {
+
+public class  AadhaarPanDetailsEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "APD_ID")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "REGISTRATION_ID", referencedColumnName = "REGISTRATION_ID")
+    @JoinColumn(name = "REGISTRATION_ID")
     private RegistrationEntity registrationEntity;
 
     @Column(name = "AADHAAR_NUMBER")
@@ -23,5 +24,5 @@ public class AadhaarPanDetailsEntity  {
 
     @Lob
     @Column(name = "CANCELLED_CHEQUE")
-    private byte[] cancelledCheque;
+    private String cancelledCheque;
 }

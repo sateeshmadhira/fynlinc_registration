@@ -5,14 +5,15 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "REGISTRATION")
+
 public class GSTValidationsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "GST_ID")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "REGISTRATION_ID", referencedColumnName = "REGISTRATION_ID")
     private RegistrationEntity registrationEntity;
 

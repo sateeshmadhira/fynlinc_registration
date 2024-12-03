@@ -15,33 +15,33 @@ public class PartnershipEntity {
 
     @Lob
     @Column(name = "ACCOUNT_STATEMENT")
-    private byte[] accountStatement;
+    private String accountStatement;
 
     @Lob
     @Column(name = "ITRS")
-    private byte[] ITRS;
+    private String ITRS;
 
     @Lob
     @Column(name = "GST_RETURNS")
-    private byte[] GSTReturns;
+    private String GSTReturns;
 
     @Lob
     @Column(name = "GST_CERTIFICATE")
-    private byte[] GSTCertificate;
+    private String GSTCertificate;
 
     @Lob
     @Column(name = "COMPANY_PAN")
-    private byte[] companyPAN;
+    private String companyPAN;
 
     @Lob
     @Column(name = "PARTNERSHIP_DEED")
-    private byte[] partnershipDeed;
+    private String partnershipDeed;
 
     @Lob
     @Column(name = "KYC")
-    private byte[] KYC;
+    private String KYC;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "ORGANIZATION_ID")
     private OrganizationDetailsEntity organizationDetailsEntity;
 }

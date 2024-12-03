@@ -1,12 +1,11 @@
 package com.ess.registration.infrastructure.domain.sql.model;
-
 import com.ess.registration.core.utils.OrganizationType;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "REGISTRATION")
+
 public class OrganizationDetailsEntity {
 
     @Id
@@ -14,7 +13,7 @@ public class OrganizationDetailsEntity {
     @Column(name = "ORGANIZATION_ID")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "REGISTRATION_ID", referencedColumnName = "REGISTRATION_ID")
     private RegistrationEntity registrationEntity;
 
@@ -35,7 +34,7 @@ public class OrganizationDetailsEntity {
     @OneToOne(mappedBy = "organizationDetailsEntity",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private ProprietorshipEntity proprietorshipEntity;
 
-    // Dynamically return the correct child entity
+   //  Dynamically return the correct child entity
     public Object getOrganizationDetails() {
         if (organizationType == null) {
             throw new IllegalStateException("OrganizationType is null. Cannot determine child entity.");
@@ -45,11 +44,8 @@ public class OrganizationDetailsEntity {
             case PARTNERSHIP -> partnershipEntity;
             case PRIVATE_LIMITED -> privateLimitedEntity;
             case SOLO_PROPRIETORSHIP -> proprietorshipEntity;
-            default -> null;
         };
     }
-
-    // Validation to ensure consistency between organization type and child entities
     @PrePersist
     @PreUpdate
     private void validateOrganizationType() {

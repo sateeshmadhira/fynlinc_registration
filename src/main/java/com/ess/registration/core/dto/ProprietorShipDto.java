@@ -6,9 +6,9 @@ import lombok.Data;
 public class ProprietorShipDto {
     private Long id;
     private Long refId;
-    private byte[] accountStatement;
-    private byte[] ITRS;
-    private byte[] GSTReturns;
-    private byte[] GSTCertificate;
-    private byte[] KYC;
+    private String accountStatement;
+    private String ITRS;
+    private String GSTReturns;
+    private String GSTCertificate;
+    private String KYC;
 }

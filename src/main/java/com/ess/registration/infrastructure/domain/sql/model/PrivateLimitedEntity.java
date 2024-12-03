@@ -10,50 +10,50 @@ public class PrivateLimitedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "PRIVATE_LTD_ID")
     private Long id;
 
     @Lob
     @Column(name = "ACCOUNT_STATEMENT")
-    private byte[] accountStatement;
+    private String accountStatement;
 
     @Lob
     @Column(name = "ITRS")
-    private byte[] ITRS;
+    private String ITRS;
 
     @Lob
     @Column(name = "GST_RETURNS")
-    private byte[] GSTReturns;
+    private String GSTReturns;
 
     @Lob
     @Column(name = "GST_CERTIFICATE")
-    private byte[] GSTCertificate;
+    private String GSTCertificate;
 
     @Lob
     @Column(name = "COMPANY_PAN")
-    private byte[] companyPAN;
+    private String companyPAN;
 
     @Lob
     @Column(name = "CERTIFICATE_OF_INCORPORATION")
-    private byte[] certificateOfIncorporation;
+    private String certificateOfIncorporation;
 
     @Lob
     @Column(name = "AOA")
-    private byte[] AOA;
+    private String AOA;
 
     @Lob
     @Column(name = "MOA")
-    private byte[] MOA;
+    private String MOA;
 
     @Lob
     @Column(name = "LATEST_SHARE_HOLDING_PATTERN")
-    private byte[] latestShareHoldingPattern;
+    private String latestShareHoldingPattern;
 
     @Lob
     @Column(name = "KYC")
-    private byte[] KYC;
+    private String KYC;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "ORGANIZATION_ID")
     private OrganizationDetailsEntity organizationDetailsEntity;
 }

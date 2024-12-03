@@ -6,14 +6,14 @@ import lombok.Data;
 public class PrivateLimitedDto {
     private Long id;
     private Long refId;
-    private byte[] accountStatement;
-    private byte[] ITRS;
-    private byte[] GSTReturns;
-    private byte[] GSTCertificate;
-    private byte[] companyPAN;
-    private byte[] certificateOfIncorporation;
-    private byte[] AOA;
-    private byte[] MOA;
-    private byte[] latestShareHoldingPattern;
-    private byte[] KYC;
+    private String accountStatement;
+    private String ITRS;
+    private String GSTReturns;
+    private String GSTCertificate;
+    private String companyPAN;
+    private String certificateOfIncorporation;
+    private String AOA;
+    private String MOA;
+    private String latestShareHoldingPattern;
+    private String KYC;
 }
