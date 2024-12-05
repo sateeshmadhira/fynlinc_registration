@@ -13,4 +13,5 @@ public class RegistrationDto {
     private GSTValidationsDto gstValidationsDto;
     private LocationDetailsDto locationDetailsDto;
     private LoginCredentialsDto loginCredentialsDto;
+    private int delFlag=1;
 }

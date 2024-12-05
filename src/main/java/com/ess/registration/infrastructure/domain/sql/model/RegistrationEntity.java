@@ -34,5 +34,8 @@ public class RegistrationEntity {
 
     @OneToOne(mappedBy = "registrationEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private LoginCredentialsEntity loginCredentialsEntity;
+
+    @Column(name = "DEL_FLAG")
+    private int delFlag=1;
 }
 

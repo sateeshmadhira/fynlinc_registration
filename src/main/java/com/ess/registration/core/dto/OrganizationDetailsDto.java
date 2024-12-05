@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class OrganizationDetailsDto  {
 
-    private Long id;
-    private Long refId;
+    private Long id;  //primary key
+    private Long refId;  //foriegn key
     private String organizationName;
     private OrganizationType organizationType;
     private PartnerShipDto partnership;

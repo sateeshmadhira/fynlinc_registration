@@ -1,10 +1,8 @@
 package com.ess.registration.infrastructure.domain.sql.model;
 
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
 import lombok.Data;
-
-import java.time.LocalDate;
+import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,12 +23,11 @@ public class AuthorizedPersonDetailsEntity  {
     private String name;
 
     @Column(name = "MOBILE_NUMBER")
-    private String mobileNumber;
+    private String phoneNumber;
 
     @Column(name = "OTP")
     private String otp;
 
     @Column(name = "START_TIME")
-    @Timestamp
     private LocalDateTime expiryDate;
 }
