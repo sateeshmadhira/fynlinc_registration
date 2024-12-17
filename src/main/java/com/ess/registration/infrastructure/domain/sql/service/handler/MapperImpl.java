@@ -16,149 +16,73 @@ public class MapperImpl implements Mapper {
     @Override
     public RegistrationEntity toEntity(RegistrationDto registrationDto) {
         RegistrationEntity registrationEntity = modelMapper.map(registrationDto, RegistrationEntity.class);
-        if(registrationDto.getOrganizationDetailsDto()!=null){
-            OrganizationDetailsEntity organizationDetailsEntity = modelMapper.map(registrationDto.getOrganizationDetailsDto(), OrganizationDetailsEntity.class);
             // Organization type-specific logic
-            OrganizationType organizationType = registrationDto.getOrganizationDetailsDto().getOrganizationType();
+            OrganizationType organizationType = registrationDto.getOrganizationType();
             switch (organizationType) {
                 case PARTNERSHIP -> {
-                    PartnershipEntity partnershipEntity = modelMapper.map(registrationDto.getOrganizationDetailsDto().getPartnership(), PartnershipEntity.class);
-                    partnershipEntity.setOrganizationDetailsEntity(organizationDetailsEntity);
-                    organizationDetailsEntity.setPartnershipEntity(partnershipEntity);
-                    organizationDetailsEntity.setPrivateLimitedEntity(null);
-                    organizationDetailsEntity.setProprietorshipEntity(null);
+                    if ((registrationDto.getPartnership() != null)) {
+                        PartnershipEntity partnershipEntity = modelMapper.map(registrationDto.getPartnership(), PartnershipEntity.class);
+                        partnershipEntity.setRegistrationEntity(registrationEntity);
+                        registrationEntity.setPartnershipEntity(partnershipEntity);
+                        registrationEntity.setPrivateLimitedEntity(null);
+                        registrationEntity.setProprietorshipEntity(null);
+                    }
                 }
                 case PRIVATE_LIMITED -> {
-                    PrivateLimitedEntity privateLimitedEntity = modelMapper.map(registrationDto.getOrganizationDetailsDto().getPrivateLimited(), PrivateLimitedEntity.class);
-                    privateLimitedEntity.setOrganizationDetailsEntity(organizationDetailsEntity);
-                    organizationDetailsEntity.setPrivateLimitedEntity(privateLimitedEntity);
-                    organizationDetailsEntity.setPartnershipEntity(null);
-                    organizationDetailsEntity.setProprietorshipEntity(null);
+                    if (registrationDto.getPrivateLimited() != null) {
+                        PrivateLimitedEntity privateLimitedEntity = modelMapper.map(registrationDto.getPrivateLimited(), PrivateLimitedEntity.class);
+                        privateLimitedEntity.setRegistrationEntity(registrationEntity);
+                        registrationEntity.setPrivateLimitedEntity(privateLimitedEntity);
+                        registrationEntity.setPartnershipEntity(null);
+                        registrationEntity.setProprietorshipEntity(null);
+                    }
                 }
-                case SOLO_PROPRIETORSHIP -> {
-                    ProprietorshipEntity proprietorshipEntity = modelMapper.map(registrationDto.getOrganizationDetailsDto().getProprietorship(), ProprietorshipEntity.class);
-                    proprietorshipEntity.setOrganizationDetailsEntity(organizationDetailsEntity);
-                    organizationDetailsEntity.setProprietorshipEntity(proprietorshipEntity);
-                    organizationDetailsEntity.setPartnershipEntity(null);
-                    organizationDetailsEntity.setPrivateLimitedEntity(null);
+                case PROPRIETORSHIP -> {
+                    if (registrationDto.getProprietorship() != null) {
+                        ProprietorshipEntity proprietorshipEntity = modelMapper.map(registrationDto.getProprietorship(), ProprietorshipEntity.class);
+                        proprietorshipEntity.setRegistrationEntity(registrationEntity);
+                        registrationEntity.setProprietorshipEntity(proprietorshipEntity);
+                        registrationEntity.setPartnershipEntity(null);
+                        registrationEntity.setPrivateLimitedEntity(null);
+                    }
                 }
             }
-            organizationDetailsEntity.setRegistrationEntity(registrationEntity);
-            registrationEntity.setOrganizationDetailsEntity(organizationDetailsEntity);
-        }
-        if (registrationDto.getAadhaarPanDetailsDto()!=null){
-            AadhaarPanDetailsEntity aadhaarPanDetailsEntity=modelMapper.map(registrationDto.getAadhaarPanDetailsDto(), AadhaarPanDetailsEntity.class);
-            aadhaarPanDetailsEntity.setRegistrationEntity(registrationEntity);
-            registrationEntity.setAadhaarPanDetailsEntity(aadhaarPanDetailsEntity);
-        }
-        if (registrationDto.getGstValidationsDto()!=null){
-            GSTValidationsEntity gstValidationsEntity=modelMapper.map(registrationDto.getGstValidationsDto(), GSTValidationsEntity.class);
-            gstValidationsEntity.setRegistrationEntity(registrationEntity);
-            registrationEntity.setGstValidationsEntity(gstValidationsEntity);
-        }
-        if (registrationDto.getLocationDetailsDto()!=null){
-            LocationDetailsEntity locationDetailsEntity=modelMapper.map(registrationDto.getLocationDetailsDto(), LocationDetailsEntity.class);
-            locationDetailsEntity.setRegistrationEntity(registrationEntity);
-            registrationEntity.setLocationDetailsEntity(locationDetailsEntity);
-        }
-        if (registrationDto.getLoginCredentialsDto()!=null){
-            LoginCredentialsEntity loginCredentialsEntity=modelMapper.map(registrationDto.getLoginCredentialsDto(), LoginCredentialsEntity.class);
-            loginCredentialsEntity.setRegistrationEntity(registrationEntity);
-            registrationEntity.setLoginCredentialsEntity(loginCredentialsEntity);
-        }
-        if (registrationDto.getCompanyTurnOverDto() != null) {
-            CompanyTurnOverEntity companyTurnOverEntity=modelMapper.map(registrationDto.getCompanyTurnOverDto(),CompanyTurnOverEntity.class);
-            companyTurnOverEntity.setRegistrationEntity(registrationEntity);
-            registrationEntity.setCompanyTurnOverEntity(companyTurnOverEntity);
-        }
-        if(registrationDto.getAuthorizedPersonDetailsDto() != null) {
-            AuthorizedPersonDetailsEntity authorizedPersonDetailsEntity = modelMapper.map(registrationDto.getAuthorizedPersonDetailsDto(), AuthorizedPersonDetailsEntity.class);
-            authorizedPersonDetailsEntity.setRegistrationEntity(registrationEntity);
-            registrationEntity.setAuthorizedPersonDetailsEntity(authorizedPersonDetailsEntity);
-        }
         return registrationEntity;
     }
 
     @Override
     public RegistrationDto toDto(RegistrationEntity registrationEntity) {
         RegistrationDto registrationDto = modelMapper.map(registrationEntity, RegistrationDto.class);
-        if (registrationEntity.getAadhaarPanDetailsEntity() != null) {
-            AadhaarPanDetailsDto aadhaarPanDetailsDto = modelMapper.map(registrationEntity.getAadhaarPanDetailsEntity(), AadhaarPanDetailsDto.class);
-            aadhaarPanDetailsDto.setRefId(registrationEntity.getRegistrationId());
-            registrationDto.setAadhaarPanDetailsDto(aadhaarPanDetailsDto);
-        }
-        if (registrationEntity.getOrganizationDetailsEntity() != null) {
-            OrganizationDetailsDto organizationDetailsDto = modelMapper.map(registrationEntity.getOrganizationDetailsEntity(), OrganizationDetailsDto.class);
-            OrganizationType organizationType = registrationEntity.getOrganizationDetailsEntity().getOrganizationType();
+            OrganizationType organizationType = registrationEntity.getOrganizationType();
             switch (organizationType) {
                 case PARTNERSHIP -> {
-                    if (registrationEntity.getOrganizationDetailsEntity().getPartnershipEntity() != null) {
-                        PartnerShipDto partnershipDto = modelMapper.map(registrationEntity.getOrganizationDetailsEntity().getPartnershipEntity(), PartnerShipDto.class);
-                        partnershipDto.setRefId(organizationDetailsDto.getId());
-                        organizationDetailsDto.setPartnership(partnershipDto);
-                        organizationDetailsDto.setProprietorship(null);
-                        organizationDetailsDto.setPrivateLimited(null);
+                    if (registrationEntity.getPartnershipEntity() != null) {
+                        PartnerShipDto partnershipDto = modelMapper.map(registrationEntity.getPartnershipEntity(), PartnerShipDto.class);
+                        partnershipDto.setRefId(registrationDto.getRegistrationId());
+                        registrationDto.setPartnership(partnershipDto);
+                        registrationDto.setProprietorship(null);
+                        registrationDto.setPrivateLimited(null);
                     }
                 }
                 case PRIVATE_LIMITED -> {
-                    if (registrationEntity.getOrganizationDetailsEntity().getPrivateLimitedEntity() != null) {
-                        PrivateLimitedDto privateLimitedDto = modelMapper.map(registrationEntity.getOrganizationDetailsEntity().getPrivateLimitedEntity(), PrivateLimitedDto.class);
-                        privateLimitedDto.setRefId(organizationDetailsDto.getId());
-                        organizationDetailsDto.setPrivateLimited(privateLimitedDto);
-                        organizationDetailsDto.setPartnership(null);
-                        organizationDetailsDto.setProprietorship(null);
+                    if (registrationEntity.getPrivateLimitedEntity() != null) {
+                        PrivateLimitedDto privateLimitedDto = modelMapper.map(registrationEntity.getPrivateLimitedEntity(), PrivateLimitedDto.class);
+                        privateLimitedDto.setRefId(registrationDto.getRegistrationId());
+                        registrationDto.setPrivateLimited(privateLimitedDto);
+                        registrationDto.setPartnership(null);
+                        registrationDto.setProprietorship(null);
                     }
                 }
-                case SOLO_PROPRIETORSHIP -> {
-                    if (registrationEntity.getOrganizationDetailsEntity().getProprietorshipEntity() != null) {
-                        ProprietorShipDto proprietorshipDto = modelMapper.map(registrationEntity.getOrganizationDetailsEntity().getProprietorshipEntity(), ProprietorShipDto.class);
-                        proprietorshipDto.setRefId(organizationDetailsDto.getId());
-                        organizationDetailsDto.setProprietorship(proprietorshipDto);
-                        organizationDetailsDto.setPartnership(null);
-                        organizationDetailsDto.setPrivateLimited(null);
+                case PROPRIETORSHIP -> {
+                    if (registrationEntity.getProprietorshipEntity() != null) {
+                        ProprietorShipDto proprietorshipDto = modelMapper.map(registrationEntity.getProprietorshipEntity(), ProprietorShipDto.class);
+                        proprietorshipDto.setRefId(registrationDto.getRegistrationId());
+                        registrationDto.setProprietorship(proprietorshipDto);
+                        registrationDto.setPartnership(null);
+                        registrationDto.setPrivateLimited(null);
                     }
                 }
             }
-            organizationDetailsDto.setRefId(registrationEntity.getRegistrationId());
-            registrationDto.setOrganizationDetailsDto(organizationDetailsDto);
-        }
-        if (registrationEntity.getAuthorizedPersonDetailsEntity() != null) {
-            AuthorizedPersonDetailsDto authorizedPersonDetailsDto = modelMapper.map(registrationEntity.getAuthorizedPersonDetailsEntity(), AuthorizedPersonDetailsDto.class);
-            authorizedPersonDetailsDto.setRefId(registrationEntity.getRegistrationId());
-            registrationDto.setAuthorizedPersonDetailsDto(authorizedPersonDetailsDto);
-        }
-        if (registrationEntity.getCompanyTurnOverEntity() != null) {
-            CompanyTurnOverDto companyTurnOverDto = modelMapper.map(registrationEntity.getCompanyTurnOverEntity(), CompanyTurnOverDto.class);
-            companyTurnOverDto.setRefId(registrationEntity.getRegistrationId());
-            registrationDto.setCompanyTurnOverDto(companyTurnOverDto);
-        }
-        if (registrationEntity.getGstValidationsEntity() != null) {
-            GSTValidationsDto gstValidationsDto = modelMapper.map(registrationEntity.getGstValidationsEntity(), GSTValidationsDto.class);
-            gstValidationsDto.setRefId(registrationEntity.getRegistrationId());
-            registrationDto.setGstValidationsDto(gstValidationsDto);
-        }
-        if (registrationEntity.getLocationDetailsEntity() != null) {
-            LocationDetailsDto locationDetailsDto = modelMapper.map(registrationEntity.getLocationDetailsEntity(), LocationDetailsDto.class);
-            locationDetailsDto.setRefId(registrationEntity.getRegistrationId());
-            registrationDto.setLocationDetailsDto(locationDetailsDto);
-        }
-        if (registrationEntity.getLoginCredentialsEntity() != null) {
-            LoginCredentialsDto loginCredentialsDto = modelMapper.map(registrationEntity.getLoginCredentialsEntity(), LoginCredentialsDto.class);
-            loginCredentialsDto.setRefId(registrationEntity.getRegistrationId());
-            registrationDto.setLoginCredentialsDto(loginCredentialsDto);
-        }
         return registrationDto;
-    }
-
-    @Override
-    public AuthorizedPersonDetailsDto toAuthDto(AuthorizedPersonDetailsEntity entity) {
-        AuthorizedPersonDetailsDto authorizedPersonDetailsDto=modelMapper.map(entity,AuthorizedPersonDetailsDto.class);
-        return authorizedPersonDetailsDto;
-    }
-
-    @Override
-    public AuthorizedPersonDetailsEntity toAuthEntity(AuthorizedPersonDetailsDto dto) {
-        AuthorizedPersonDetailsEntity authorizedPersonDetailsEntity=modelMapper.map(dto, AuthorizedPersonDetailsEntity.class);
-        return authorizedPersonDetailsEntity;
     }
 }

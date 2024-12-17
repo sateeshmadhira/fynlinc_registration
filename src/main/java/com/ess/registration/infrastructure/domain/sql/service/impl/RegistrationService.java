@@ -10,4 +10,5 @@ public interface RegistrationService {
     ApiResponse getRegistrationById(Long id);
     ApiResponse getAllRegistrations();
     ApiResponse deleteRegistration(Long id);
+    ApiResponse updateRegistration(Long id, RegistrationRequest requestDto);
 }
