@@ -1,5 +1,6 @@
 package com.ess.registration.infrastructure.domain.sql.service.impl;
 import com.ess.registration.core.dto.RegistrationDto;
+import com.ess.registration.core.exception.DuplicateException;
 import com.ess.registration.core.exception.InvalidOrganizationTypeException;
 import com.ess.registration.core.req.RegistrationRequest;
 import com.ess.registration.core.resp.ApiResponse;
@@ -9,6 +10,7 @@ import com.ess.registration.infrastructure.domain.sql.service.handler.Mapper;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,49 +30,49 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     @Transactional
-    public ApiResponse createRegistration(RegistrationRequest requestDto) {
+    public ApiResponse createRegistration(@Valid RegistrationRequest requestDto) {
         try {
-            // Extract the DTO and convert it to the entity
-            RegistrationEntity registrationEntity = mapper.toEntity(requestDto.getRegistrationDto());
+            // Convert DTO to entity
+            RegistrationEntity registrationEntity = mapper.toEntity(requestDto.getRegistration());
 
-            // Validate if Aadhaar number, Pan number, or Gst number already exists in the database
+            // Check for duplicate Aadhaar, PAN, or GST numbers
             Optional<RegistrationEntity> existingEntity = registrationRepository.findByAadhaarNumberOrPanNumberOrGstNumber(
                     registrationEntity.getAadhaarNumber(),
                     registrationEntity.getPanNumber(),
                     registrationEntity.getGstNumber()
             );
 
-            // If any of the fields already exist, throw an exception
+            // Handle duplicates with meaningful exceptions
             if (existingEntity.isPresent()) {
                 RegistrationEntity entity = existingEntity.get();
                 if (entity.getAadhaarNumber().equals(registrationEntity.getAadhaarNumber())) {
-                    throw new EntityExistsException("Aadhaar number already exists: " + registrationEntity.getAadhaarNumber());
+                    throw new DuplicateException("Aadhaar number already exists: " + registrationEntity.getAadhaarNumber());
                 }
                 if (entity.getPanNumber().equals(registrationEntity.getPanNumber())) {
-                    throw new EntityExistsException("PAN number already exists: " + registrationEntity.getPanNumber());
+                    throw new DuplicateException("PAN number already exists: " + registrationEntity.getPanNumber());
                 }
                 if (entity.getGstNumber().equals(registrationEntity.getGstNumber())) {
-                    throw new EntityExistsException("GST number already exists: " + registrationEntity.getGstNumber());
+                    throw new DuplicateException("GST number already exists: " + registrationEntity.getGstNumber());
                 }
             }
 
-            // Validate the organization type
+            // Validate organization type
             validateOrganizationType(registrationEntity);
 
-            // Save the entity (ID will be generated here if no exceptions occur)
+            // Save the entity
             RegistrationEntity savedEntity = registrationRepository.save(registrationEntity);
 
-            // Convert the saved entity back to DTO for response
+            // Convert saved entity to DTO for response
             RegistrationDto registrationDto = mapper.toDto(savedEntity);
 
-            // Return successful response
+            // Return success response
             return new ApiResponse("Successfully Created Registration", registrationDto);
-        } catch (EntityExistsException e) {
-            // Specific handling for entity already existing (duplicate Aadhaar/Pan/Gst)
-            return new ApiResponse("Registration failed: " + e.getMessage(), null);
+        } catch (DuplicateException e) {
+            // Rethrow DuplicateException to be handled at the controller level
+            throw e;
         } catch (Exception e) {
-            // Generic exception handling for other errors
-            return new ApiResponse("Registration creation failed due to error: " + e.getMessage(), null);
+            // Log and throw other exceptions as internal server errors
+            throw new RuntimeException("Error occurred while creating registration", e);
         }
     }
 
@@ -113,7 +115,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .orElseThrow(() -> new EntityNotFoundException("Registration not found for ID: " + id));
 
         // Get the RegistrationDto from the request
-        RegistrationDto registrationDto = requestDto.getRegistrationDto();
+        RegistrationDto registrationDto = requestDto.getRegistration();
 
         // Update common fields
         updateCommonFields(existingEntity, registrationDto);

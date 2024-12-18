@@ -24,14 +24,14 @@ public class RegistrationDto {
     private int zipCode;
     private int delFlag=1;
 
-    // Method to populate the specific child DTO based on organization type
-    public void setOrganizationDetails(Object childDetails) {
-        if (childDetails instanceof PartnerShipDto) {
-            this.partnership = (PartnerShipDto) childDetails;
-        } else if (childDetails instanceof PrivateLimitedDto) {
-            this.privateLimited = (PrivateLimitedDto) childDetails;
-        } else if (childDetails instanceof ProprietorShipDto) {
-            this.proprietorship = (ProprietorShipDto) childDetails;
-        }
-    }
+//    // Method to populate the specific child DTO based on organization type
+//    public void setOrganizationDetails(Object childDetails) {
+//        if (childDetails instanceof PartnerShipDto) {
+//            this.partnership = (PartnerShipDto) childDetails;
+//        } else if (childDetails instanceof PrivateLimitedDto) {
+//            this.privateLimited = (PrivateLimitedDto) childDetails;
+//        } else if (childDetails instanceof ProprietorShipDto) {
+//            this.proprietorship = (ProprietorShipDto) childDetails;
+//        }
+ //   }
 }

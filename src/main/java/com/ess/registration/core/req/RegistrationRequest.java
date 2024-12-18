@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RegistrationRequest extends ReqFilter{
 
-   private RegistrationDto registrationDto=new RegistrationDto();
+   private RegistrationDto registration =new RegistrationDto();
 }

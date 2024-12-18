@@ -4,16 +4,13 @@ import com.ess.registration.core.utils.OrganizationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.ToString;
+
 import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "REGISTRATION",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "REG_AADHAAR_NUMBER", name = "UNIQUE_AADHAAR_NUMBER"),
-                @UniqueConstraint(columnNames = "REG_PAN_NUMBER", name = "UNIQUE_PAN_NUMBER"),
-                @UniqueConstraint(columnNames = "REG_GST_NUMBER", name = "UNIQUE_GST_NUMBER")
-        })
+@Table(name = "INVOICE_DISCOUNT_REGISTRATION")
 public class RegistrationEntity {
 
     @Id
@@ -31,12 +28,15 @@ public class RegistrationEntity {
     @Column(name = "REG_ORG_TYPE", nullable = false)
     private OrganizationType organizationType;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "registrationEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PartnershipEntity partnershipEntity;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "registrationEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PrivateLimitedEntity privateLimitedEntity;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "registrationEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ProprietorshipEntity proprietorshipEntity;
 
@@ -50,7 +50,6 @@ public class RegistrationEntity {
     @Column(name = "REG_PAN_NUMBER", length = 10, unique = true, nullable = false)
     private String panNumber;
 
-    @Lob
     @NotBlank(message = "Cancelled Cheque cannot be blank")
     @Column(name = "REG_CANCELLED_CHEQUE", nullable = false)
     private String cancelledCheque;
@@ -106,4 +105,20 @@ public class RegistrationEntity {
             throw new IllegalStateException("ProprietorshipEntity must be provided for SOLO_PROPRIETORSHIP type.");
         }
     }
+
+    @Override
+    public String toString() {
+        return "RegistrationEntity{" +
+                "registrationId=" + registrationId +
+                ", organizationName='" + organizationName + '\'' +
+                ", organizationType=" + organizationType +
+                ", aadhaarNumber=" + aadhaarNumber +
+                ", panNumber='" + panNumber + '\'' +
+                ", gstNumber='" + gstNumber + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", zipCode=" + zipCode +
+                '}';
+    }
 }
+

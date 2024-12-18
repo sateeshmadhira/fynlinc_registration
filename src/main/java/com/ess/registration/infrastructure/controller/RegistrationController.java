@@ -1,5 +1,6 @@
 package com.ess.registration.infrastructure.controller;
 import com.ess.registration.core.constants.RegistrationConstants;
+import com.ess.registration.core.exception.DuplicateException;
 import com.ess.registration.core.req.RegistrationRequest;
 import com.ess.registration.core.resp.ApiResponse;
 import com.ess.registration.infrastructure.domain.sql.service.impl.RegistrationService;
@@ -21,11 +22,14 @@ public class RegistrationController {
     public ResponseEntity<ApiResponse> createRegistration(@RequestBody @Valid RegistrationRequest requestDto) {
         try {
             ApiResponse apiResponse = registrationService.createRegistration(requestDto);
-            return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
-        }catch (Exception e) {
-            return new ResponseEntity<>(new ApiResponse("Error occurred while creating registration"+ e.getMessage(),null), HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse); // Use 201 CREATED for successful creation
+        } catch (DuplicateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse(e.getMessage(), null)); // 409 CONFLICT for duplicates
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null)); // 500 INTERNAL SERVER ERROR for other issues
         }
     }
+
 
     @GetMapping(RegistrationConstants.BY_ID)
     public ResponseEntity<ApiResponse> getRegistrationById(@PathVariable("ID") Long id) {
